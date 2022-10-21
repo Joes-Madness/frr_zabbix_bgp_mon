@@ -1,280 +1,182 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <zabbix_export>
-    <version>4.2</version>
-    <date>2019-10-02T14:28:37Z</date>
+    <version>6.0</version>
+    <date>2022-10-21T08:49:51Z</date>
     <groups>
         <group>
+            <uuid>2d3e344a602f425b861948789ae17e59</uuid>
             <name>BGP Routers</name>
         </group>
     </groups>
     <templates>
         <template>
-            <template>Quagga bgp sessions</template>
-            <name>Quagga bgp sessions</name>
-            <description/>
+            <uuid>c330eb588d40488887f3c1cfe115f118</uuid>
+            <template>FRR bgp sessions</template>
+            <name>FRR bgp sessions</name>
             <groups>
                 <group>
                     <name>BGP Routers</name>
                 </group>
             </groups>
-            <applications>
-                <application>
-                    <name>Quagga BGP sessions</name>
-                </application>
-            </applications>
-            <items/>
             <discovery_rules>
                 <discovery_rule>
+                    <uuid>d5770eba8d414376badcddc8ab60dde5</uuid>
                     <name>BGP peers discovery</name>
-                    <type>0</type>
-                    <snmp_community/>
-                    <snmp_oid/>
                     <key>bgp.peers.discovery</key>
                     <delay>1h</delay>
-                    <status>0</status>
-                    <allowed_hosts/>
-                    <snmpv3_contextname/>
-                    <snmpv3_securityname/>
-                    <snmpv3_securitylevel>0</snmpv3_securitylevel>
-                    <snmpv3_authprotocol>0</snmpv3_authprotocol>
-                    <snmpv3_authpassphrase/>
-                    <snmpv3_privprotocol>0</snmpv3_privprotocol>
-                    <snmpv3_privpassphrase/>
-                    <params/>
-                    <ipmi_sensor/>
-                    <authtype>0</authtype>
-                    <username/>
-                    <password/>
-                    <publickey/>
-                    <privatekey/>
-                    <port/>
-                    <filter>
-                        <evaltype>0</evaltype>
-                        <formula/>
-                        <conditions/>
-                    </filter>
-                    <lifetime>30d</lifetime>
-                    <description/>
                     <item_prototypes>
                         <item_prototype>
-                            <name>BGP neighbor state json</name>
-                            <type>0</type>
-                            <snmp_community/>
-                            <snmp_oid/>
-                            <key>bgp.peer.state[{#PEER_IP}]</key>
-                            <delay>1m</delay>
+                            <uuid>794cfc38989541e080329c213a26fdca</uuid>
+                            <name>BGP neighbor {#PEER_IP} ({#DESCRIPTION}) state json</name>
+                            <key>bgp.peer.stat[{#PEER_IP}]</key>
                             <history>10d</history>
                             <trends>0</trends>
-                            <status>0</status>
-                            <value_type>4</value_type>
-                            <allowed_hosts/>
-                            <units/>
-                            <snmpv3_contextname/>
-                            <snmpv3_securityname/>
-                            <snmpv3_securitylevel>0</snmpv3_securitylevel>
-                            <snmpv3_authprotocol>0</snmpv3_authprotocol>
-                            <snmpv3_authpassphrase/>
-                            <snmpv3_privprotocol>0</snmpv3_privprotocol>
-                            <snmpv3_privpassphrase/>
-                            <params/>
-                            <ipmi_sensor/>
-                            <authtype>0</authtype>
-                            <username/>
-                            <password/>
-                            <publickey/>
-                            <privatekey/>
-                            <port/>
-                            <description/>
-                            <inventory_link>0</inventory_link>
-                            <applications>
-                                <application>
-                                    <name>Quagga BGP sessions</name>
-                                </application>
-                            </applications>
-                            <valuemap/>
-                            <logtimefmt/>
-                            <preprocessing/>
-                            <jmx_endpoint/>
-                            <timeout>3s</timeout>
-                            <url/>
-                            <query_fields/>
-                            <posts/>
-                            <status_codes>200</status_codes>
-                            <follow_redirects>1</follow_redirects>
-                            <post_type>0</post_type>
-                            <http_proxy/>
-                            <headers/>
-                            <retrieve_mode>0</retrieve_mode>
-                            <request_method>1</request_method>
-                            <output_format>0</output_format>
-                            <allow_traps>0</allow_traps>
-                            <ssl_cert_file/>
-                            <ssl_key_file/>
-                            <ssl_key_password/>
-                            <verify_peer>0</verify_peer>
-                            <verify_host>0</verify_host>
-                            <application_prototypes/>
-                            <master_item/>
+                            <value_type>TEXT</value_type>
+                            <request_method>POST</request_method>
+                            <tags>
+                                <tag>
+                                    <tag>Application</tag>
+                                    <value>FRR BGP sessions</value>
+                                </tag>
+                            </tags>
                         </item_prototype>
                         <item_prototype>
+                            <uuid>e0dd4c35f7094327b23447a97e0fd904</uuid>
                             <name>BGP {#PEER_IP} ({#DESCRIPTION}) state</name>
-                            <type>18</type>
-                            <snmp_community/>
-                            <snmp_oid/>
-                            <key>bgp.peer.[{#PEER_IP}, state]</key>
+                            <type>DEPENDENT</type>
+                            <key>bgp.peer[{#PEER_IP}, state]</key>
                             <delay>0</delay>
                             <history>15d</history>
                             <trends>0</trends>
-                            <status>0</status>
-                            <value_type>0</value_type>
-                            <allowed_hosts/>
-                            <units/>
-                            <snmpv3_contextname/>
-                            <snmpv3_securityname/>
-                            <snmpv3_securitylevel>0</snmpv3_securitylevel>
-                            <snmpv3_authprotocol>0</snmpv3_authprotocol>
-                            <snmpv3_authpassphrase/>
-                            <snmpv3_privprotocol>0</snmpv3_privprotocol>
-                            <snmpv3_privpassphrase/>
-                            <params/>
-                            <ipmi_sensor/>
-                            <authtype>0</authtype>
-                            <username/>
-                            <password/>
-                            <publickey/>
-                            <privatekey/>
-                            <port/>
-                            <description/>
-                            <inventory_link>0</inventory_link>
-                            <applications>
-                                <application>
-                                    <name>Quagga BGP sessions</name>
-                                </application>
-                            </applications>
+                            <value_type>FLOAT</value_type>
                             <valuemap>
-                                <name>Quagga BGP peers state</name>
+                                <name>FRR BGP peers state</name>
                             </valuemap>
-                            <logtimefmt/>
                             <preprocessing>
                                 <step>
-                                    <type>12</type>
-                                    <params>$.state</params>
-                                    <error_handler>0</error_handler>
-                                    <error_handler_params/>
+                                    <type>JSONPATH</type>
+                                    <parameters>
+                                        <parameter>$.state</parameter>
+                                    </parameters>
                                 </step>
                             </preprocessing>
-                            <jmx_endpoint/>
-                            <timeout>3s</timeout>
-                            <url/>
-                            <query_fields/>
-                            <posts/>
-                            <status_codes>200</status_codes>
-                            <follow_redirects>1</follow_redirects>
-                            <post_type>0</post_type>
-                            <http_proxy/>
-                            <headers/>
-                            <retrieve_mode>0</retrieve_mode>
-                            <request_method>1</request_method>
-                            <output_format>0</output_format>
-                            <allow_traps>0</allow_traps>
-                            <ssl_cert_file/>
-                            <ssl_key_file/>
-                            <ssl_key_password/>
-                            <verify_peer>0</verify_peer>
-                            <verify_host>0</verify_host>
-                            <application_prototypes/>
                             <master_item>
-                                <key>bgp.peer.state[{#PEER_IP}]</key>
+                                <key>bgp.peer.stat[{#PEER_IP}]</key>
                             </master_item>
+                            <request_method>POST</request_method>
+                            <tags>
+                                <tag>
+                                    <tag>Application</tag>
+                                    <value>FRR BGP sessions</value>
+                                </tag>
+                            </tags>
+                            <trigger_prototypes>
+                                <trigger_prototype>
+                                    <uuid>215f47a58b9d4d93ac1bc4ccbed1d454</uuid>
+                                    <expression>last(/FRR bgp sessions/bgp.peer[{#PEER_IP}, state],#1:now-5s)&lt;-1</expression>
+                                    <name>BGP session {#PEER_IP} ({#DESCRIPTION}) is down</name>
+                                    <priority>DISASTER</priority>
+                                    <description>Last value: {ITEM.LASTVALUE1}.</description>
+                                    <manual_close>YES</manual_close>
+                                </trigger_prototype>
+                            </trigger_prototypes>
+                        </item_prototype>
+                        <item_prototype>
+                            <uuid>c742426318a84a4eafafcbe2d1e0fb64</uuid>
+                            <name>BGP {#PEER_IP} ({#DESCRIPTION}) uptime</name>
+                            <type>DEPENDENT</type>
+                            <key>bgp.peer[{#PEER_IP}, uptime]</key>
+                            <delay>0</delay>
+                            <history>15d</history>
+                            <trends>0</trends>
+                            <units>uptime</units>
+                            <valuemap>
+                                <name>FRR BGP peers state</name>
+                            </valuemap>
+                            <preprocessing>
+                                <step>
+                                    <type>JSONPATH</type>
+                                    <parameters>
+                                        <parameter>$.uptime</parameter>
+                                    </parameters>
+                                </step>
+                                <step>
+                                    <type>MULTIPLIER</type>
+                                    <parameters>
+                                        <parameter>0.001</parameter>
+                                    </parameters>
+                                </step>
+                            </preprocessing>
+                            <master_item>
+                                <key>bgp.peer.stat[{#PEER_IP}]</key>
+                            </master_item>
+                            <tags>
+                                <tag>
+                                    <tag>Application</tag>
+                                    <value>FRR BGP sessions</value>
+                                </tag>
+                            </tags>
+                            <trigger_prototypes>
+                                <trigger_prototype>
+                                    <uuid>a910dc6ed7a545d5a73ebee9781363a3</uuid>
+                                    <expression>last(/FRR bgp sessions/bgp.peer[{#PEER_IP}, uptime],#1)&lt;600</expression>
+                                    <name>BGP session {#PEER_IP} ({#DESCRIPTION}) restarted (uptime &lt; 10min)</name>
+                                    <priority>DISASTER</priority>
+                                    <description>Last value: {ITEM.LASTVALUE1}.</description>
+                                    <manual_close>YES</manual_close>
+                                    <dependencies>
+                                        <dependency>
+                                            <name>BGP session {#PEER_IP} ({#DESCRIPTION}) is down</name>
+                                            <expression>last(/FRR bgp sessions/bgp.peer[{#PEER_IP}, state],#1:now-5s)&lt;-1</expression>
+                                        </dependency>
+                                    </dependencies>
+                                </trigger_prototype>
+                            </trigger_prototypes>
                         </item_prototype>
                     </item_prototypes>
-                    <trigger_prototypes>
-                        <trigger_prototype>
-                            <expression>{Quagga bgp sessions:bgp.peer.[{#PEER_IP}, state].last(,5)}&lt;-1</expression>
-                            <recovery_mode>0</recovery_mode>
-                            <recovery_expression/>
-                            <name>BGP session - {#PEER_IP} {#DESCRIPTION} is down</name>
-                            <correlation_mode>0</correlation_mode>
-                            <correlation_tag/>
-                            <url/>
-                            <status>0</status>
-                            <priority>5</priority>
-                            <description>Last value: {ITEM.LASTVALUE1}.</description>
-                            <type>0</type>
-                            <manual_close>1</manual_close>
-                            <dependencies/>
-                            <tags/>
-                        </trigger_prototype>
-                    </trigger_prototypes>
-                    <graph_prototypes/>
-                    <host_prototypes/>
-                    <jmx_endpoint/>
-                    <timeout>3s</timeout>
-                    <url/>
-                    <query_fields/>
-                    <posts/>
-                    <status_codes>200</status_codes>
-                    <follow_redirects>1</follow_redirects>
-                    <post_type>0</post_type>
-                    <http_proxy/>
-                    <headers/>
-                    <retrieve_mode>0</retrieve_mode>
-                    <request_method>1</request_method>
-                    <allow_traps>0</allow_traps>
-                    <ssl_cert_file/>
-                    <ssl_key_file/>
-                    <ssl_key_password/>
-                    <verify_peer>0</verify_peer>
-                    <verify_host>0</verify_host>
-                    <lld_macro_paths/>
-                    <preprocessing/>
-                    <master_item/>
+                    <request_method>POST</request_method>
                 </discovery_rule>
             </discovery_rules>
-            <httptests/>
-            <macros/>
-            <templates/>
-            <screens/>
-            <tags/>
+            <valuemaps>
+                <valuemap>
+                    <uuid>d10694e9580947b184fe10f07e15421d</uuid>
+                    <name>FRR BGP peers state</name>
+                    <mappings>
+                        <mapping>
+                            <value>-2</value>
+                            <newvalue>Idle (Admin)</newvalue>
+                        </mapping>
+                        <mapping>
+                            <value>-3</value>
+                            <newvalue>Idle (PfxCt)</newvalue>
+                        </mapping>
+                        <mapping>
+                            <value>-4</value>
+                            <newvalue>Idle</newvalue>
+                        </mapping>
+                        <mapping>
+                            <value>-5</value>
+                            <newvalue>Connect</newvalue>
+                        </mapping>
+                        <mapping>
+                            <value>-6</value>
+                            <newvalue>Active</newvalue>
+                        </mapping>
+                        <mapping>
+                            <value>-7</value>
+                            <newvalue>OpenSent</newvalue>
+                        </mapping>
+                        <mapping>
+                            <value>-8</value>
+                            <newvalue>OpenConfirm</newvalue>
+                        </mapping>
+                        <mapping>
+                            <value>-1</value>
+                            <newvalue>Established</newvalue>
+                        </mapping>
+                    </mappings>
+                </valuemap>
+            </valuemaps>
         </template>
     </templates>
-    <value_maps>
-        <value_map>
-            <name>Quagga BGP peers state</name>
-            <mappings>
-                <mapping>
-                    <value>-1</value>
-                    <newvalue>Idle (Admin)</newvalue>
-                </mapping>
-                <mapping>
-                    <value>-2</value>
-                    <newvalue>Idle (PfxCt)</newvalue>
-                </mapping>
-                <mapping>
-                    <value>-3</value>
-                    <newvalue>Idle</newvalue>
-                </mapping>
-                <mapping>
-                    <value>-4</value>
-                    <newvalue>Connect</newvalue>
-                </mapping>
-                <mapping>
-                    <value>-5</value>
-                    <newvalue>Active</newvalue>
-                </mapping>
-                <mapping>
-                    <value>-6</value>
-                    <newvalue>OpenSent</newvalue>
-                </mapping>
-                <mapping>
-                    <value>-7</value>
-                    <newvalue>OpenConfirm</newvalue>
-                </mapping>
-                <mapping>
-                    <value>-8</value>
-                    <newvalue>Established</newvalue>
-                </mapping>
-            </mappings>
-        </value_map>
-    </value_maps>
 </zabbix_export>

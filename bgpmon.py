@@ -1,5 +1,4 @@
-#!/usr/bin/env python
-import re
+#!/usr/bin/env python3
 import subprocess
 import sys
 import json
@@ -8,70 +7,43 @@ import os
 import time
 
 VAL_MAP = {
-    "Idle (Admin)": {"state": -1},
-    "Idle (PfxCt)": {"state": -2},
-    "Idle": {"state": -3},
-    "Connect": {"state": -4},
-    "Active": {"state": -5},
-    "OpenSent": {"state": -6},
-    "OpenConfirm": {"state": -7},
-    "Established": {"state": -8}
+    "Established": -1,
+    "Idle (Admin)": -2,
+    "Idle (PfxCt)": -3,
+    "Idle": -4,
+    "Connect": -5,
+    "Active": -6,
+    "OpenSent": -7,
+    "OpenConfirm": -8
 }
 
 JSONFILE = '/tmp/bgpmon.json'
 CACHELIFE = 60
+DISCOVERY_DYNAMIC = True
 
 parser = argparse.ArgumentParser()
-parser.add_argument("action", help="discovery | neighbor_settings ")
+parser.add_argument("action", help="discovery | neighbor_stat")
+parser.add_argument("stat", nargs='?', help="state | uptime | pfxSnt | pfxRcd", default="json")
 parser.add_argument("-n", help="neighbor")
 args = parser.parse_args()
-
-
-def run_config():
-    neighbor_settings = {}
-    try:
-        process = subprocess.Popen(
-            ["vtysh", "-c", "show run"], stdout=subprocess.PIPE)
-    except IOError:
-        print "ZBX_NOTSUPPORTED"
-        sys.exit(1)
-    out, err = process.communicate()
-    pattern = r'neighbor\s*([0-9.]+)\s*(maximum-prefix|description|remote-as)'\
-        '\s*([\w-]+)'
-    for line in out.split("/n"):
-        neighbors = (re.findall(pattern, line))
-
-    for neighbor in neighbors:
-        if neighbor_settings.get(neighbor[0]):
-            neighbor_settings[neighbor[0]].update({neighbor[1]: neighbor[2]})
-        else:
-            neighbor_settings[neighbor[0]] = {neighbor[1]: neighbor[2]}
-
-    with open(JSONFILE, 'w') as f:
-        json.dump({"neighbor_settings": neighbor_settings}, f)
-
-    return {"neighbor_settings": neighbor_settings}
 
 
 def bgp_summary():
     result = []
     try:
         process = subprocess.Popen(
-            ["vtysh", "-c", "show ip bgp summary"], stdout=subprocess.PIPE)
+            ["vtysh", "-c", "show ip bgp summary json"], stdout=subprocess.PIPE)
     except IOError:
         print("ZBX_NOTSUPPORTED")
         sys.exit(1)
 
     out, err = process.communicate()
-    for line in out.split("\n"):
-        out = (re.findall(r'^([\w.]+)(\s+\S+){8}([\w)(\s]+$)', line))
-        if out:
-            result.append({out[0][0]: {"state": out[0][2].strip()}})
+    result = json.loads(out.decode('utf-8'))
 
     with open(JSONFILE, 'w') as f:
-        json.dump({"neighbors": result}, f)
+        json.dump(result, f)
 
-    return {"neighbors": result}
+    return result
 
 if __name__ == '__main__':
     json_cache = None
@@ -82,29 +54,41 @@ if __name__ == '__main__':
             with open(JSONFILE) as f:
                 json_cache = json.load(f)
 
-    if args.action == 'neighbor_state' and args.n:
-        if not json_cache or not json_cache.get("neighbors"):
+    if args.action == 'neighbor_stat' and args.n:
+        if not json_cache or not json_cache.get("ipv4Unicast"):
             json_cache = bgp_summary()
 
-        for n in json_cache["neighbors"]:
-            if n.get(args.n):
-                value = n.get(args.n)
-                result = VAL_MAP.get(value["state"], value)
-                break
+        if args.n in json_cache["ipv4Unicast"]["peers"]:
+            n = json_cache["ipv4Unicast"]["peers"][args.n]
+            if args.stat == 'state':
+                result = VAL_MAP.get(n["state"])
+            if args.stat == 'uptime':
+                result = n["peerUptimeMsec"]
+            if args.stat == 'pfxSnt':
+                result = n["pfxSnt"]
+            if args.stat == 'pfxRcd':
+                result = n["pfxRcd"]
+            if args.stat == 'json':
+                result = {
+                    'state': VAL_MAP.get(n["state"]),
+                    'uptime': n["peerUptimeMsec"],
+                    'pfxSnt': n["pfxSnt"],
+                    'pfxRcd': n["pfxRcd"]
+                }
 
     if args.action == 'discovery':
-        if not json_cache or not json_cache.get("neighbor_settings"):
-            json_cache = run_config()
+        if not json_cache or not json_cache.get("ipv4Unicast"):
+            json_cache = bgp_summary()
 
         result = {"data": []}
-        for n in json_cache["neighbor_settings"].items():
-            description = n[1].get("description", "No description")
-            maximum_prefix = n[1].get("maximum-prefix", -1)
+        for n in json_cache["ipv4Unicast"]["peers"].items():
+            description = n[1].get("desc", n[1].get("hostname", "No description"))
+            dynamic = n[1].get("dynamicPeer", False)
             value = {
                 "{#PEER_IP}": n[0],
-                "{#DESCRIPTION}": description,
-                "{#MAX-PREFIX}": maximum_prefix}
-            result["data"].append(value)
+                "{#DESCRIPTION}": description}
+            if not dynamic or DISCOVERY_DYNAMIC:
+                result["data"].append(value)
 
     if not result:
         print("ZBX_NOTSUPPORTED")

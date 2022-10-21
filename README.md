@@ -1,4 +1,4 @@
-# Monitoring quagga BGP session  for zabbix
+# Monitoring FRR BGP session  for zabbix
 
 ## Description
 Descover and monitor BGP session with count of prefix or state like "Active" or Idle (Admin).
@@ -14,18 +14,13 @@ Trigger if session change state.
 - write file for zabbix agent for example /etc/zabbix/zabbix_agentd.d/userparameter_bgpd.conf
 ```sh
 UserParameter=bgp.peers.discovery,/usr/local/bin/bgpmon.py discovery
-UserParameter=bgp.peer.state[*],/usr/local/bin/bgpmon.py neighbor_state -n $1
+UserParameter=bgp.peer.stat[*],/usr/local/bin/bgpmon.py -n $1 neighbor_stat $2
 ```
 - Provide vtysh access to user zabbix
-  - if you using quagga:
-  ```
-  sudo usermod -a -G quagga zabbix
-  ```
-  - if you using frr:
-  ```
-  sudo usermod -a -G frrvty zabbix
-  ```
-- restart zabbix-agnet
+```
+sudo usermod -a -G frrvty zabbix
+```
+- Restart zabbix-agent
 ```
 systemctl restart zabbix-agent
 ```
